@@ -1,0 +1,12 @@
+#products-container {
+  display: grid;
+  grid-template-rows: 1fr 6fr;
+  max-height: 100%;
+  max-width: 100%;
+  gap: 2%;
+  align-items: center;
+  justify-items: center;
+  margin: 0;
+  padding: 2%;
+  background-color: #f9f8f8;
+}
