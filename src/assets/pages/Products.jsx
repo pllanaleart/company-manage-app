@@ -4,21 +4,16 @@ import ProductsTable from "../components/products/ProductsTable";
 import ProductSearch from "../components/products/ProductSearch";
 
 function Products() {
-  const [isproductRegisterModal, setProductRegisterModal] = useState(false);
+  const [refetchData, setRefetchdata] = useState("");
 
-  const openProductRegisterModal = () => {
-    setProductRegisterModal(true);
+  const handleRefetch = (data) => {
+    setRefetchdata(data);
   };
-  const closeProductRegisterModal = () => {
-    setProductRegisterModal(false);
-  };
+
   return (
     <div id="products-container">
-      <ProductSearch
-        isOpen={isproductRegisterModal}
-        handleClose={closeProductRegisterModal}
-      />
-      <ProductsTable />
+      <ProductSearch askRefetchData={handleRefetch} />
+      <ProductsTable useRefetchData={refetchData} />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { useState } from "react";
 import ProductRegisterModal from "./ProductRegisterModal";
 
-function ProductSearch() {
+function ProductSearch({ askRefetchData }) {
   const [isproductRegisterModal, setProductRegisterModal] = useState(false);
 
   const openProductRegisterModal = () => {
@@ -22,6 +22,7 @@ function ProductSearch() {
       <ProductRegisterModal
         isOpen={isproductRegisterModal}
         handleClose={closeProductRegisterModal}
+        useRefetchData={askRefetchData}
       />
     </div>
   );

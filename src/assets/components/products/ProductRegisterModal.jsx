@@ -1,44 +1,44 @@
 import "./ProductRegisterModal.css";
-import { useState } from "react";
+import { useRef } from "react";
 import Modal from "react-modal";
+import { useMutation } from "react-query";
 import toastr from "toastr";
 
-function ProductRegisterModal({ isOpen, handleClose }) {
-  const [barcodeNumber, setBarcodeNumber] = useState("");
-  const [description, setDescription] = useState("");
-  const [mrp, setMrp] = useState("");
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+function ProductRegisterModal({ isOpen, handleClose, useRefetchData }) {
+  const nameRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const barcodeNumberRef = useRef(null);
+  const mrpRef = useRef(null);
+  const priceRef = useRef(null);
 
-  async function handleSubmit() {
+  const mutation = useMutation((product) => {
+    fetch("http://localhost:8080/products", {
+      method: "POST",
+      body: JSON.stringify(product),
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+  });
+
+  const handleSubmit = async () => {
     const newProduct = {
-      name: name,
-      description: description,
-      mrp: mrp,
-      barcodeNumber: barcodeNumber,
-      price: price,
+      name: nameRef.current.value,
+      description: descriptionRef.current.value,
+      mrp: mrpRef.current.value,
+      barcodeNumber: barcodeNumberRef.current.value,
+      price: priceRef.current.value,
     };
 
     try {
-      const response = await fetch("http://localhost:8080/products", {
-        method: "POST",
-        body: JSON.stringify(newProduct),
-        headers: {
-          "Content-type": "application/json",
-        },
-      });
-      if (response.ok) {
-        // Handle successful registration
-        toastr.success("Product Registered successfully!");
-        handleClose(); // Close the modal
-      } else {
-        // Handle registration failure
-        console.error("Failed to register product");
-      }
+      await mutation.mutateAsync(newProduct);
+      toastr.success("Product Registered successfully!");
+      useRefetchData(newProduct);
+      handleClose();
     } catch (error) {
-      console.error("Error occurred while registering product", error);
+      toastr.error(error);
     }
-  }
+  };
 
   return (
     <Modal
@@ -56,8 +56,7 @@ function ProductRegisterModal({ isOpen, handleClose }) {
           placeholder="Name"
           id="name-register"
           required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          ref={nameRef}
         />
         <textarea
           rows={4}
@@ -65,32 +64,28 @@ function ProductRegisterModal({ isOpen, handleClose }) {
           placeholder="Description"
           id="description-register"
           required
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          ref={descriptionRef}
         />
         <input
           type="number"
           placeholder="Barcode"
           id="barconde-register"
           required
-          value={barcodeNumber}
-          onChange={(e) => setBarcodeNumber(e.target.value)}
+          ref={barcodeNumberRef}
         />
         <input
           type="number"
           placeholder="Mrp"
           id="mrp-register"
           required
-          value={mrp}
-          onChange={(e) => setMrp(e.target.value)}
+          ref={mrpRef}
         />
         <input
           type="number"
           placeholder="Price"
           id="price-register"
           required
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          ref={priceRef}
         />
         {/* Other form inputs */}
         <div className="register-buttons-group">
