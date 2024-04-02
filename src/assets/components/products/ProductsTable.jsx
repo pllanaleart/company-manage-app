@@ -1,6 +1,7 @@
 import "./ProductsTable.css";
 import { useQuery, useMutation } from "react-query";
 import { useState, useEffect } from "react";
+import ProductRegisterModal from "./ProductRegisterModal";
 import toastr from "toastr";
 import DeleteIcon from "../../svg/delete-icon2.svg";
 import EditIcon from "../../svg/edit-icon2.svg";
@@ -13,6 +14,8 @@ function ProductsTable({ useRefetchData }) {
     pageSize: 6,
     last: false,
   });
+  const [openUpdateModal, setUpdateModal] = useState(false);
+  const [productToUpdate, setProductToUpdate] = useState("");
   const { isLoading, error, data, refetch } = useQuery("products", () =>
     fetch(
       `http://localhost:8080/products?page=${paginationInfo.pageNo}&limit=${paginationInfo.pageSize}&sortBy=id&sortDir=dsc`
@@ -27,6 +30,12 @@ function ProductsTable({ useRefetchData }) {
     });
   });
 
+  const closeUpdateModal = () => {
+    setUpdateModal(false);
+  };
+  const setTrueUpdateModal = () => {
+    setUpdateModal(true);
+  };
   function handlePagination(arrow) {
     setPaginationInfo((prevPaginationInfo) => {
       const tempPagination = { ...prevPaginationInfo }; // Use the previous state
@@ -43,6 +52,7 @@ function ProductsTable({ useRefetchData }) {
       await deleteMutation.mutateAsync(deleteId);
       if (deleteMutation.isSuccess) {
         toastr.success(`Product widh id ${deleteId} is deleted successfully`);
+        console.log("deleted success");
         refetch();
       }
     } catch (error) {
@@ -50,9 +60,11 @@ function ProductsTable({ useRefetchData }) {
     }
   };
 
+  const handleUpdate = (product) => {
+    setTrueUpdateModal();
+    setProductToUpdate(product);
+  };
   useEffect(() => {
-    console.log(paginationInfo.pageNo);
-    console.log(isTableChanged);
     refetch();
   }, [paginationInfo, useRefetchData]);
   return (
@@ -79,7 +91,11 @@ function ProductsTable({ useRefetchData }) {
                   <td>{product.mrp}</td>
                   <td>{product.price}</td>
                   <td>
-                    <img src={EditIcon} alt="edit icon" />
+                    <img
+                      src={EditIcon}
+                      alt="edit icon"
+                      onClick={() => handleUpdate(product)}
+                    />
                     <img
                       src={DeleteIcon}
                       alt="del icon"
@@ -118,6 +134,12 @@ function ProductsTable({ useRefetchData }) {
           </tr>
         </tfoot>
       </table>
+      <ProductRegisterModal
+        isOpen={openUpdateModal}
+        handleClose={closeUpdateModal}
+        useRefetchData={refetch}
+        updateProduct={productToUpdate}
+      />
     </div>
   );
 }

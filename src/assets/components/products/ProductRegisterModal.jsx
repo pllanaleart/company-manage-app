@@ -1,39 +1,68 @@
 import "./ProductRegisterModal.css";
-import { useRef } from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { useMutation } from "react-query";
 import toastr from "toastr";
 
-function ProductRegisterModal({ isOpen, handleClose, useRefetchData }) {
-  const nameRef = useRef(null);
-  const descriptionRef = useRef(null);
-  const barcodeNumberRef = useRef(null);
-  const mrpRef = useRef(null);
-  const priceRef = useRef(null);
-
+function ProductRegisterModal({
+  isOpen,
+  handleClose,
+  useRefetchData,
+  updateProduct,
+}) {
+  const [barcodeNumber, setBarcodeNumber] = useState("");
+  const [description, setDescription] = useState("");
+  const [mrp, setMrp] = useState("");
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [action, setAction] = useState({
+    action: "Register",
+    method: "POST",
+    link: "http://localhost:8080/products",
+  });
   const mutation = useMutation((product) => {
-    fetch("http://localhost:8080/products", {
-      method: "POST",
+    fetch(action.link, {
+      method: action.method,
       body: JSON.stringify(product),
       headers: {
         "Content-type": "application/json",
       },
     });
   });
+  useEffect(() => {
+    // Update state when updateProduct changes
+    if (updateProduct) {
+      setBarcodeNumber(updateProduct.barcodeNumber || "");
+      setDescription(updateProduct.description || "");
+      setMrp(updateProduct.mrp || "");
+      setName(updateProduct.name || "");
+      setPrice(updateProduct.price || "");
+      setAction({
+        action: "Update",
+        method: "PUT",
+        link: `http://localhost:8080/products/${updateProduct.id}`,
+      });
+    }
+  }, [updateProduct]);
 
   const handleSubmit = async () => {
     const newProduct = {
-      name: nameRef.current.value,
-      description: descriptionRef.current.value,
-      mrp: mrpRef.current.value,
-      barcodeNumber: barcodeNumberRef.current.value,
-      price: priceRef.current.value,
+      name: name,
+      description: description,
+      mrp: mrp,
+      barcodeNumber: barcodeNumber,
+      price: price,
     };
 
     try {
       await mutation.mutateAsync(newProduct);
-      toastr.success("Product Registered successfully!");
+      toastr.success(`Product ${action.action}ed successfully!`);
       useRefetchData(newProduct);
+      setBarcodeNumber("");
+      setDescription("");
+      setMrp("");
+      setName("");
+      setPrice("");
       handleClose();
     } catch (error) {
       toastr.error(error);
@@ -49,14 +78,15 @@ function ProductRegisterModal({ isOpen, handleClose, useRefetchData }) {
       style={{ content: { inset: "revert-layer" } }}
     >
       <form className="flex-input">
-        <h3> product</h3>
+        <h3>{action.action} Product</h3>
         {/* Your form fields here */}
         <input
           type="text"
           placeholder="Name"
           id="name-register"
           required
-          ref={nameRef}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <textarea
           rows={4}
@@ -64,33 +94,37 @@ function ProductRegisterModal({ isOpen, handleClose, useRefetchData }) {
           placeholder="Description"
           id="description-register"
           required
-          ref={descriptionRef}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <input
           type="number"
           placeholder="Barcode"
           id="barconde-register"
           required
-          ref={barcodeNumberRef}
+          value={barcodeNumber}
+          onChange={(e) => setBarcodeNumber(e.target.value)}
         />
         <input
           type="number"
           placeholder="Mrp"
           id="mrp-register"
           required
-          ref={mrpRef}
+          value={mrp}
+          onChange={(e) => setMrp(e.target.value)}
         />
         <input
           type="number"
           placeholder="Price"
           id="price-register"
           required
-          ref={priceRef}
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
         />
         {/* Other form inputs */}
         <div className="register-buttons-group">
-          <button type="button" onClick={handleSubmit} id="submit-register-btn">
-            Register
+          <button type="submit" onClick={handleSubmit} id="submit-register-btn">
+            {action.action}
           </button>
           <button onClick={handleClose} id="close-register-btn">
             Close
