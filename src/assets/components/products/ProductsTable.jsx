@@ -8,7 +8,7 @@ import EditIcon from "../../svg/edit-icon2.svg";
 import LeftArrow from "../../svg/left-arrow.svg";
 import RightArrow from "../../svg/right-arrow.svg";
 
-function ProductsTable({ useRefetchData }) {
+function ProductsTable({ useRefetchData, searchedProduct }) {
   const [paginationInfo, setPaginationInfo] = useState({
     pageNo: 0,
     pageSize: 6,
@@ -81,7 +81,7 @@ function ProductsTable({ useRefetchData }) {
           </tr>
         </thead>
         <tbody>
-          {data &&
+          {searchedProduct === "" && data ? (
             data.content.map((product) => {
               return (
                 <tr key={product.id}>
@@ -104,7 +104,28 @@ function ProductsTable({ useRefetchData }) {
                   </td>
                 </tr>
               );
-            })}
+            })
+          ) : searchedProduct !== "" ? ( // Check if searchedProduct is defined
+            <tr key={searchedProduct.id}>
+              <td>{searchedProduct.name}</td>
+              <td>{searchedProduct.description}</td>
+              <td>{searchedProduct.barcodeNumber}</td>
+              <td>{searchedProduct.mrp}</td>
+              <td>{searchedProduct.price}</td>
+              <td>
+                <img
+                  src={EditIcon}
+                  alt="edit icon"
+                  onClick={() => handleUpdate(searchedProduct)}
+                />
+                <img
+                  src={DeleteIcon}
+                  alt="del icon"
+                  onClick={() => handleDelete(searchedProduct.id)}
+                />
+              </td>
+            </tr>
+          ) : null}
         </tbody>
         <tfoot>
           <tr>

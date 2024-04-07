@@ -5,6 +5,7 @@ import ProductSearch from "../components/products/ProductSearch";
 
 function Products() {
   const [refetchData, setRefetchdata] = useState("");
+  const [searchedProduct, setSearchedProduct] = useState("");
 
   const handleRefetch = (data) => {
     setRefetchdata(data);
@@ -12,8 +13,14 @@ function Products() {
 
   return (
     <div id="products-container">
-      <ProductSearch askRefetchData={handleRefetch} />
-      <ProductsTable useRefetchData={refetchData} />
+      <ProductSearch
+        askRefetchData={handleRefetch}
+        setSearchInput={setSearchedProduct}
+      />
+      <ProductsTable
+        useRefetchData={refetchData}
+        searchedProduct={searchedProduct}
+      />
     </div>
   );
 }
