@@ -1,0 +1,83 @@
+#stock-table-container {
+  display: flex;
+  justify-content: center;
+  height: 90%;
+  min-height: 90%;
+  max-height: 90%;
+  width: 90%;
+  overflow: hidden;
+  min-width: 90%;
+  max-width: 90%;
+  background-color: #f9f8f8;
+  backdrop-filter: blur(10px); /* Apply blur effect */
+  border-radius: 10px; /* Rounded corners */
+
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+}
+
+#stock-table-container thead {
+  background-color: #171738;
+  color: #f9f8f8;
+
+  height: 15%;
+}
+#stock-table-container tfoot {
+  display: table-footer-group;
+  width: 100%;
+
+  height: 2rem;
+  text-align: center;
+}
+
+#stock-table-container table {
+  border-collapse: collapse;
+  width: 100%;
+  padding: 2%;
+}
+#stock-table-container tr {
+  border-bottom: 2px solid #171738;
+}
+#stock-table-container tbody tr:hover {
+  background-color: rgba(23, 23, 56, 0.2);
+}
+#stock-table-container tfoot tr:last-child {
+  border-bottom: none;
+}
+#stock-table-container tfoot tr img {
+  padding: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+#stock-table-container td {
+  text-align: center;
+}
+#stock-table-container th:nth-child(1) {
+  width: 15%;
+}
+#stock-table-container th:nth-child(2) {
+  width: 25%;
+}
+#stock-table-container th:nth-child(3) {
+  width: 20%;
+}
+#stock-table-container th:nth-child(4) {
+  width: 10%;
+}
+#stock-table-container th:nth-child(5) {
+  width: 10%;
+}
+#stock-table-container th:nth-child(6) {
+  width: 20%;
+}
+
+#stock-table-container img {
+  height: 2rem;
+  width: 2rem;
+  padding: 2%;
+}
+#stock-table-container td:first-child {
+  font-weight: 600;
+}
+#stock-table-container img:hover {
+  cursor: pointer;
+}

@@ -1,5 +1,11 @@
+import "./Stock.css";
+
 function Stock() {
-  return <h1>Stock</h1>;
+  return (
+    <div id="stock-container">
+      <h1>Stock</h1>
+    </div>
+  );
 }
 
 export default Stock;

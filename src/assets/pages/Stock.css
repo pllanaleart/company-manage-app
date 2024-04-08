@@ -1,0 +1,7 @@
+#stock-container {
+  display: flex;
+  max-width: 100%;
+  max-height: 100%;
+  justify-content: center;
+  align-items: center;
+}

@@ -53,7 +53,6 @@ function ProductsTable({ useRefetchData, searchedProduct }) {
       if (deleteMutation.isSuccess) {
         toastr.success(`Product widh id ${deleteId} is deleted successfully`);
         console.log("deleted success");
-        refetch();
       }
     } catch (error) {
       toastr.error(error);
@@ -66,7 +65,7 @@ function ProductsTable({ useRefetchData, searchedProduct }) {
   };
   useEffect(() => {
     refetch();
-  }, [paginationInfo, useRefetchData]);
+  }, [paginationInfo, useRefetchData, deleteMutation]);
   return (
     <div id="table-container">
       <table>
